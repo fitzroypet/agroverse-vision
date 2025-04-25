@@ -25,7 +25,7 @@ $$;
 GRANT EXECUTE ON FUNCTION diagnose_plant_disease(TEXT, INTEGER) TO authenticated;
 
 -- Create a function to match diseases using vector similarity
-CREATE OR REPLACE FUNCTION match_diseases(
+CREATE OR REPLACE FUNCTION match_disease_images(
   query_embedding vector(768),
   match_threshold float DEFAULT 0.7,
   match_count int DEFAULT 5
@@ -61,4 +61,4 @@ END;
 $$;
 
 -- Grant execute permission to authenticated users
-GRANT EXECUTE ON FUNCTION match_diseases(vector(768), float, int) TO authenticated; 
+GRANT EXECUTE ON FUNCTION match_disease_images(vector(768), float, int) TO authenticated; 
