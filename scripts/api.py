@@ -13,7 +13,7 @@ import uuid
 from datetime import datetime
 
 # Import our diagnosis function
-from scripts.diagnose import diagnose_plant_disease
+from diagnose import diagnose_plant_disease
 from supabase import create_client, Client
 
 # Configure logging
