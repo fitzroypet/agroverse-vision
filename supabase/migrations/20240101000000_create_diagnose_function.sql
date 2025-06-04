@@ -24,6 +24,9 @@ $$;
 -- Grant execute permission to authenticated users
 GRANT EXECUTE ON FUNCTION diagnose_plant_disease(TEXT, INTEGER) TO authenticated;
 
+-- Drop the function if it exists to avoid signature mismatch
+DROP FUNCTION IF EXISTS match_disease_images(vector(768), float, int);
+
 -- Create a function to match diseases using vector similarity
 CREATE OR REPLACE FUNCTION match_disease_images(
   query_embedding vector(768),
@@ -32,10 +35,12 @@ CREATE OR REPLACE FUNCTION match_disease_images(
 )
 RETURNS TABLE (
   id uuid,
+  crop_name text,
   disease_name text,
-  description text,
   symptoms text,
+  description text,
   recommendation text,
+  image_url text,
   similarity float
 )
 LANGUAGE plpgsql
@@ -44,10 +49,12 @@ BEGIN
   RETURN QUERY
   SELECT
     disease_reference_images.id,
+    disease_reference_images.crop_name,
     disease_reference_images.disease_name,
-    disease_reference_images.description,
     disease_reference_images.symptoms,
+    disease_reference_images.description,
     disease_reference_images.recommendation,
+    disease_reference_images.image_url,
     1 - (disease_reference_images.embedding <=> query_embedding) AS similarity
   FROM
     disease_reference_images
